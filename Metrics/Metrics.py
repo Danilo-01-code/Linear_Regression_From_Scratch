@@ -2,65 +2,67 @@ import pandas as pd
 from math import sqrt
 import logging
 import numpy as np
+from typing import Union, Optional, Tuple
 
-def pearsons_correlation(p: pd.DataFrame, x_col: str, y_col: str, det: bool = False) -> float:
+
+import pandas as pd
+import numpy as np
+from typing import Union, Tuple, Optional
+from math import sqrt
+import logging
+
+def pearsons_correlation(
+        y: np.ndarray,
+        y_hat: np.ndarray,
+        squared: bool = False) -> float:
     """
-    Calculate Pearsons Correlation between (x & y)
-    if det == True 
-    Calculate the Coefficient of determination R^2
+    Calculate Pearson's Correlation between (x & y).
+    If det == True, calculate the Coefficient of determination R^2.
 
     Parameters:
     ----------
-
-    p (pd.DataFrame): DataFrame containing at least two columns named 'x' and 'y' 
-                      representing the variables to correlate.
+    
+    y (Optional[str]): The real values (True Labels).
+    y_hat (Optional[str]): The predicted values from the model.
+    squared (bool): If True, returns R^2 instead of pearsons_correlation.
 
     Returns:
     --------
-
     float: Pearson's Correlation Coefficient between the variables 'x' and 'y'.
     """
 
-    if x_col not in p.columns or y_col not in p.columns:
-        logging.error(f"x: {x_col} or y {y_col} not in Dataframe")
-        raise ValueError(f"x: {x_col} or y {y_col} not in Dataframe")
+    if len(y) < 2 or len(y_hat) < 2:
+        logging.error("Columns must have at least two observations.")
+        raise ValueError("Columns must have at least two observations.")
     
-    logging.info(f"Selected columns {x_col} and {y_col}")
+    sum_y = np.sum(y)
+    sum_y_hat = np.sum(y_hat)
+    sum_y_times_y_hat = np.sum(y * y_hat)
+    sum_y_squared = np.sum(y ** 2)
+    sum_y_hat_squared = np.sum(y_hat ** 2)
 
-    #Extrating variables x and y
-    x = p[x_col]
-    y = p[y_col]
+    n = len(y)  # Number of observations
 
-    if len(x) < 2 or len(y) < 2:
-        logging.error("Columns must have at least two obsercations.")
-        raise ValueError("Columns must have at least two obsercations.")
+    # Calculate the numerator and denominator for Pearson's correlation coefficient
+    numerator = n * sum_y_times_y_hat - sum_y * sum_y_hat
+    denominator = np.sqrt((n * sum_y_hat_squared - sum_y_hat ** 2) * (n * sum_y_squared - sum_y ** 2))
+
+    if denominator == 0:
+        logging.log(logging.ERROR, f"denominator = {denominator}, correlation is undefined")
+        raise ZeroDivisionError("The denominator value is 0; the correlation is undefined.")
     
-    n = len(p) #Observation Numbers
-
-    #Sum of squares calculation
-    sum_x = sum(x)
-    sum_xy = sum(x*y)
-    sum_y = sum(y)
-    sum_x_squared = sum(x ** 2)
-    sum_y_squared = sum(y ** 2)
-
-    numerator = n * sum_xy - sum_x * sum_y
-    denominator = sqrt(n * sum_x_squared - sum_x**2) * sqrt(n * sum_y_squared - sum_y ** 2)
-
     r = numerator / denominator
 
-    if det:
-        return r**2
-        # r^2 == 1 , The model explains 100% of the variation in data.
-        # r^2 == 0 , the model explains None of the variation. 
+    if squared:
+        return r ** 2  # Return R^2
     else:
-        # r == 0 , no correlation.
-        # r > 0 , positive correlation.
-        # r < 0 , negative correalation.
-        return r
+        return r  # Return Pearson's Correlation Coefficient
+
     
     
-def MSE(y:np.ndarray, y_hat:np.ndarray) -> float:
+def MSE(y:np.ndarray, 
+        y_hat:np.ndarray
+        ) -> float:
     """
     Calculate the  Mean Squared Error (MSE)
 

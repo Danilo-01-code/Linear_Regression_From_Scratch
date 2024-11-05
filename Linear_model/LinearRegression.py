@@ -153,7 +153,15 @@ class LinearRegression:
         logging.info("Training Completed.")
         return self
     
-    #TODO _coef and _intercept
-    #TODO __Str__ method
+
     def predict(self, x:np.ndarray) -> np.ndarray:
-        return self.intercept + self.coef * x #Hypothesis function
+        return self.intercept + self.coef * x #Hypothesis Function
+    
+    def __Str__(self):
+        return f'{self.intercept} + {self.coef} * x'
+    
+    def _coef(self):
+        return self.coef
+
+    def _intercept(self):
+        return self.intercept
