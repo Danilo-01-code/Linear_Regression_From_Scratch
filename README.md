@@ -17,8 +17,8 @@ To run this project locally, you need to install the dependencies. All requireme
 ## Prerequisites
 To run this project you need install the necessary dependencies by running:
 
-```bash
-pip install -r requirements.txt
+
+`pip install -r requirements.txt`
 
 ## Features
 - **Stochastic Gradient Descent (SGD)**: Optimizes the model using mini-batches for faster convergence.
