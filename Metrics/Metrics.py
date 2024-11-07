@@ -1,15 +1,8 @@
-import pandas as pd
-from math import sqrt
 import logging
 import numpy as np
 from typing import Union, Optional, Tuple
-
-
-import pandas as pd
-import numpy as np
-from typing import Union, Tuple, Optional
-from math import sqrt
 import logging
+
 
 def pearsons_correlation(
         y: np.ndarray,

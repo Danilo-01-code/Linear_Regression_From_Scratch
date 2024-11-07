@@ -1,0 +1,14 @@
+.vscode/
+
+# Environments
+.env
+.venv
+Pipfile.lock
+
+#Byte Compiled
+__pycache__
+
+#python cache temporary files
+*.pyc
+*.pyo
+.python-version
